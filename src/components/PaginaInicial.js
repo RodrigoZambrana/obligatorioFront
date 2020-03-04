@@ -10,7 +10,6 @@ export default class PaginaInicial extends React.Component {
 		super(props);
 		this.state = {
 			nombreProducto: '',
-			filtro: '',
 			listaProductos: [],
 			productosComprados: [],
 			productoFiltered: [],
@@ -23,7 +22,6 @@ export default class PaginaInicial extends React.Component {
 	}
 
 	componentDidMount() {
-
 		if (sessionStorage.getItem("usuarioLogueado") !== "1") {
 			return (window.location = '/Login');
 		}
@@ -44,14 +42,11 @@ export default class PaginaInicial extends React.Component {
 			newList = currentList.filter(item => {
 				const lc = item.name.toLowerCase();
 				const filter = e.target.value.toLowerCase();
-				console.log(filter);
 				return lc.includes(filter);
 			});
 		} else {
-			// If the search bar is empty, set newList to original task list
 			newList = this.state.listaProductos;
 		}
-		// Set the filtered state based on what our rules added to newList
 		this.setState({
 			productoFiltered: newList
 		});
@@ -63,7 +58,6 @@ export default class PaginaInicial extends React.Component {
 		this.calcularTotal();
 	};
 	agregarAlCarrito = (nuevoProducto) => {
-		debugger;
 		let encontreProducto = this.state.productosComprados.find(producto => producto.name === nuevoProducto.name);
 		if (!encontreProducto) {
 			this.addNewItem(nuevoProducto);
@@ -88,6 +82,7 @@ export default class PaginaInicial extends React.Component {
 
 	calcularTotal = () => {
 		let subTotal = 0;
+		let aux = [];
 		if (this.state.productosComprados.length === 0) {
 			this.setState({
 				costoSubTotal: 0,
@@ -106,7 +101,6 @@ export default class PaginaInicial extends React.Component {
 	finalizarCompra = () => {
 		this.setState({
 			nombreProducto: '',
-			filtro: '',
 			productosComprados: [],
 			costoSubTotal: 0,
 			costoTotal: 0,
@@ -117,7 +111,6 @@ export default class PaginaInicial extends React.Component {
 	funcSalir = () => {
 		this.setState({
 			nombreProducto: '',
-			filtro: '',
 			productosComprados: [],
 			costoSubTotal: 0,
 			costoTotal: 0,
@@ -134,15 +127,17 @@ export default class PaginaInicial extends React.Component {
 					<SearchBar handleChange={this.handleChange} />
 					{this.state.productoFiltered.length === 0 ? (
 						//muestra todos los productos
-
-						<div className='mainPage row text'>
-							<Alert variant="danger">
+						<div className='mainPage row '>
+							<div className='col-md-12'><Alert variant="danger">
 								No existen productos
-								</Alert><br></br>
-							{/* {this.state.listaProductos.map((producto, index) =>
+								</Alert></div>
+							{this.state.listaProductos.map((producto, index) =>
 								<Producto key={index} producto={producto} agregarAlCarrito={this.agregarAlCarrito} />
-							)} */}
+							)}
+
 						</div>
+
+
 					) : (
 							<div className='mainPage row '>
 								{this.state.productoFiltered.map((producto, index) =>
